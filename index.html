@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Footprint Quiz</title>
+    <style>
+        /* --- Reset & Base Styles --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #1f2937;
+            padding: 20px;
+        }
+
+        /* --- Components --- */
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+            position: relative; /* For positioning lang button */
+        }
+
+        .lang-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #f3f4f6;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: #059669;
+            color: white;
+        }
+        .btn-primary:hover { background-color: #047857; transform: translateY(-2px); }
+
+        .btn-option {
+            width: 100%;
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+            margin-bottom: 0.75rem;
+            justify-content: space-between;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: left; /* Ensure text aligns left for Hindi readability */
+        }
+        .btn-option:hover {
+            border-color: #059669;
+            background-color: #ecfdf5;
+            color: #065f46;
+        }
+
+        /* --- Typography & Layout --- */
+        h1 { font-size: 2rem; margin-bottom: 1rem; color: #111827; }
+        h2 { font-size: 1.5rem; margin-bottom: 1rem; color: #374151; }
+        p { color: #6b7280; line-height: 1.6; margin-bottom: 1.5rem; }
+        
+        .icon-container {
+            background-color: #d1fae5;
+            padding: 1rem;
+            border-radius: 50%;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+        .icon-svg { width: 32px; height: 32px; color: #059669; }
+
+        /* --- Progress Bar --- */
+        .progress-container {
+            width: 100%;
+            background-color: #f3f4f6;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #059669;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* --- Results Styles --- */
+        .score-box {
+            background: #f9fafb;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .score-value { font-size: 4rem; font-weight: 800; color: #1f2937; line-height: 1; margin-bottom: 0.5rem; }
+        .score-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .tips-container { text-align: left; margin-top: 2rem; }
+        .tip-card {
+            background: white;
+            border-left: 4px solid #059669;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        /* --- Utility --- */
+        .hidden { display: none !important; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <!-- APP CONTAINER -->
+    <div id="app">
+        
+        <!-- Language Switcher (Visible on all screens) -->
+        <button class="lang-btn" onclick="toggleLanguage()">
+            <span id="lang-label">हिंदी में पढ़ें</span>
+        </button>
+        
+        <!-- SCREEN 1: WELCOME -->
+        <div id="welcome-screen" class="card">
+            <div class="icon-container">
+                <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            </div>
+            <h1 id="ui-title">Carbon Footprint Quiz</h1>
+            <p id="ui-subtitle">Discover your environmental impact and get personalized tips to help save the planet.</p>
+            <button class="btn btn-primary" onclick="startQuiz()">
+                <span id="ui-start-btn">Start Quiz</span>
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+        </div>
+
+        <!-- SCREEN 2: QUIZ -->
+        <div id="quiz-screen" class="card hidden">
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 0.875rem; color: #6b7280;">
+                <span id="question-tracker">Question 1</span>
+                <span id="question-category">Category</span>
+            </div>
+
+            <h2 id="question-text">Question goes here?</h2>
+
+            <div id="options-container">
+                <!-- Buttons injected by JS -->
+            </div>
+        </div>
+
+        <!-- SCREEN 3: RESULTS -->
+        <div id="results-screen" class="card hidden">
+            <div class="score-box">
+                <p id="ui-score-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.875rem;">Your Carbon Score</p>
+                <div id="final-score" class="score-value">0</div>
+                <div id="score-badge" class="score-badge">Rating</div>
+                <p id="score-desc">Description</p>
+            </div>
+
+            <div class="tips-container">
+                <h3 id="ui-tips-title">Personalized Action Plan</h3>
+                <div id="tips-list" style="margin-top: 1rem;">
+                    <!-- Tips injected by JS -->
+                </div>
+            </div>
+
+            <button class="btn" style="margin-top: 2rem; color: #6b7280;" onclick="restartQuiz()">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                <span id="ui-restart-btn">Retake Quiz</span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- LOGIC -->
+    <script>
+        // --- DATA (Bilingual) ---
+        // Format: { en: "English", hi: "Hindi" }
+        
+        const uiText = {
+            title: { en: "Carbon Footprint Quiz", hi: "कार्बन फुटप्रिंट क्विज़" },
+            subtitle: { en: "Discover your environmental impact and get personalized tips to help save the planet.", hi: "अपने पर्यावरणीय प्रभाव को जानें और पृथ्वी को बचाने के लिए व्यक्तिगत सुझाव प्राप्त करें।" },
+            startBtn: { en: "Start Quiz", hi: "क्विज़ शुरू करें" },
+            questionLabel: { en: "Question", hi: "प्रश्न" },
+            ofLabel: { en: "of", hi: "का" },
+            scoreLabel: { en: "Your Carbon Score", hi: "आपका कार्बन स्कोर" },
+            tipsTitle: { en: "Personalized Action Plan", hi: "व्यक्तिगत कार्य योजना" },
+            restartBtn: { en: "Retake Quiz", hi: "फिर से क्विज़ लें" },
+            noTips: { en: "No tips needed! You made perfect choices.", hi: "किसी सुझाव की आवश्यकता नहीं! आपने बेहतरीन विकल्प चुने।" },
+            langBtn: { en: "हिंदी में पढ़ें", hi: "Read in English" },
+            ratings: {
+                low: {
+                    badge: { en: "Eco Warrior", hi: "इको वॉरियर" },
+                    desc: { en: "Fantastic! You are living very sustainably.", hi: "शानदार! आप बहुत स्थायी जीवन जी रहे हैं।" }
+                },
+                med: {
+                    badge: { en: "Average Citizen", hi: "औसत नागरिक" },
+                    desc: { en: "You're doing okay, but there is definitely room for improvement.", hi: "आप ठीक कर रहे हैं, लेकिन सुधार की गुंजाइश है।" }
+                },
+                high: {
+                    badge: { en: "Carbon Giant", hi: "कार्बन जाइंट" },
+                    desc: { en: "Your footprint is quite high. Small changes can make a big difference!", hi: "आपका फुटप्रिंट काफी ज्यादा है। छोटे बदलाव बड़ा फर्क ला सकते हैं!" }
+                }
+            }
+        };
+
+        const questions = [
+            {
+                category: { en: 'Transport', hi: 'परिवहन' },
+                question: { en: "How do you usually get around?", hi: "आप आमतौर पर यात्रा कैसे करते हैं?" },
+                options: [
+                    { text: { en: "Walking or Biking", hi: "पैदल या साइकिल" }, score: 0, tip: null },
+                    { text: { en: "Public Transport", hi: "सार्वजनिक परिवहन" }, score: 10, tip: { en: "Public transit is great! Try walking the last mile if possible.", hi: "सार्वजनिक परिवहन बहुत अच्छा है! यदि संभव हो तो अंतिम मील पैदल चलें।" } },
+                    { text: { en: "Gasoline Car", hi: "पेट्रोल/डीजल कार" }, score: 50, tip: { en: "Consider carpooling or maintaining steady speeds to save fuel.", hi: "ईंधन बचाने के लिए कारपूलिंग या स्थिर गति बनाए रखने पर विचार करें।" } },
+                    { text: { en: "Large SUV / Truck", hi: "बड़ी एसयूवी / ट्रक" }, score: 80, tip: { en: "Large vehicles emit significantly more. Combine trips to drive less.", hi: "बड़े वाहन काफी अधिक उत्सर्जन करते हैं। कम ड्राइव करने के लिए यात्राओं को मिलाएं।" } }
+                ]
+            },
+            {
+                category: { en: 'Diet', hi: 'आहार' },
+                question: { en: "What does your diet look like?", hi: "आपका आहार कैसा है?" },
+                options: [
+                    { text: { en: "Vegan/Vegetarian", hi: "शाकाहारी" }, score: 0, tip: null },
+                    { text: { en: "Meat occasionally", hi: "कभी-कभी मांस" }, score: 30, tip: { en: "Meatless Mondays are a great way to start reducing impact.", hi: "'मीटलेस मंडे' (मांस रहित सोमवार) प्रभाव कम करने का एक शानदार तरीका है।" } },
+                    { text: { en: "Meat daily", hi: "रोजाना मांस" }, score: 60, tip: { en: "Beef has the highest footprint. Try swapping for chicken or plant protein.", hi: "बीफ का फुटप्रिंट सबसे ज्यादा होता है। चिकन या प्लांट प्रोटीन से बदलने की कोशिश करें।" } }
+                ]
+            },
+            {
+                category: { en: 'Energy', hi: 'ऊर्जा' },
+                question: { en: "How do you power your home?", hi: "आप अपने घर को बिजली कैसे देते हैं?" },
+                options: [
+                    { text: { en: "Solar / Renewable", hi: "सौर / नवीकरणीय" }, score: 0, tip: null },
+                    { text: { en: "Standard Grid Mix", hi: "मानक बिजली ग्रिड" }, score: 30, tip: { en: "Switch to LED bulbs and unplug electronics when not in use.", hi: "एलईडी बल्ब अपनाएं और उपयोग न होने पर इलेक्ट्रॉनिक्स अनप्लग करें।" } },
+                    { text: { en: "Mainly Coal/Gas", hi: "मुख्यतः कोयला/गैस" }, score: 50, tip: { en: "Look into green energy providers or smart thermostats.", hi: "हरित ऊर्जा प्रदाताओं या स्मार्ट थर्मोस्टेट के बारे में जानकारी लें।" } }
+                ]
+            },
+            {
+                category: { en: 'Shopping', hi: 'खरीदारी' },
+                question: { en: "How often do you buy new clothes?", hi: "आप कितनी बार नए कपड़े खरीदते हैं?" },
+                options: [
+                    { text: { en: "Rarely / Second Hand", hi: "शायद ही कभी / पुराना समान" }, score: 5, tip: { en: "Thrifting is fantastic. Keep it up!", hi: "पुराने कपड़े इस्तेमाल करना शानदार है। इसे जारी रखें!" } },
+                    { text: { en: "Monthly", hi: "हर महीने" }, score: 25, tip: { en: "Try the '30 wear rule': Only buy it if you'll wear it 30 times.", hi: "'30 वियर रूल' आजमाएं: तभी खरीदें जब आप इसे 30 बार पहनेंगे।" } },
+                    { text: { en: "Fast Fashion / Weekly", hi: "फास्ट फैशन / साप्ताहिक" }, score: 60, tip: { en: "Fast fashion is resource-heavy. Try a clothing swap instead.", hi: "फास्ट फैशन संसाधनों पर भारी पड़ता है। इसके बजाय कपड़ों की अदला-बदली करें।" } }
+                ]
+            },
+            {
+                category: { en: 'Travel', hi: 'यात्रा' },
+                question: { en: "How many flights do you take a year?", hi: "आप साल में कितनी हवाई यात्राएं करते हैं?" },
+                options: [
+                    { text: { en: "None", hi: "कोई नहीं" }, score: 0, tip: null },
+                    { text: { en: "1-2 Short Haul", hi: "1-2 छोटी दूरी" }, score: 30, tip: { en: "Direct flights use less fuel than connecting ones.", hi: "कनेक्टिंग उड़ानों की तुलना में सीधी उड़ानें कम ईंधन का उपयोग करती हैं।" } },
+                    { text: { en: "3+ Flights", hi: "3+ उड़ानें" }, score: 80, tip: { en: "Trains are 80% more carbon-efficient than flying for short trips.", hi: "छोटी यात्राओं के लिए ट्रेनें उड़ानों की तुलना में 80% अधिक कार्बन-कुशल हैं।" } }
+                ]
+            },
+            {
+                category: { en: 'Water', hi: 'पानी' },
+                question: { en: "How long is your average shower?", hi: "आपका औसत स्नान कितनी देर का होता है?" },
+                options: [
+                    { text: { en: "Under 5 mins", hi: "5 मिनट से कम" }, score: 0, tip: null },
+                    { text: { en: "5-10 mins", hi: "5-10 मिनट" }, score: 15, tip: { en: "Installing a low-flow showerhead can save huge amounts of water.", hi: "कम प्रवाह वाला शावरहेड लगाने से भारी मात्रा में पानी बच सकता है।" } },
+                    { text: { en: "15+ mins", hi: "15+ मिनट" }, score: 40, tip: { en: "Heating water is energy-intensive. Try timing your showers.", hi: "पानी गर्म करने में बहुत ऊर्जा लगती है। अपने स्नान का समय निर्धारित करें।" } }
+                ]
+            },
+            {
+                category: { en: 'Waste', hi: 'कचरा' },
+                question: { en: "How much do you recycle?", hi: "आप कितना रीसायकल करते हैं?" },
+                options: [
+                    { text: { en: "Everything possible", hi: "जितना संभव हो सब" }, score: 0, tip: null },
+                    { text: { en: "Occasionally", hi: "कभी-कभी" }, score: 20, tip: { en: "Recycling aluminium saves 95% of energy vs making new.", hi: "एल्युमीनियम को रीसायकल करने से नया बनाने की तुलना में 95% ऊर्जा बचती है।" } },
+                    { text: { en: "Rarely / Never", hi: "शायद ही कभी / कभी नहीं" }, score: 50, tip: { en: "Start small: Separate paper and plastics.", hi: "शुरुआत करें: कागज और प्लास्टिक को अलग-अलग करें।" } }
+                ]
+            },
+            {
+                category: { en: 'Food', hi: 'भोजन' },
+                question: { en: "Where does your food come from?", hi: "आपका भोजन कहाँ से आता है?" },
+                options: [
+                    { text: { en: "Locally grown / Seasonal", hi: "स्थानीय / मौसमी" }, score: 5, tip: null },
+                    { text: { en: "Supermarket mix", hi: "सुपरमार्केट मिक्स" }, score: 25, tip: { en: "Imported food has high 'food miles'. Check labels.", hi: "आयातित भोजन में उच्च 'फूड माइल्स' होते हैं। लेबल जांचें।" } },
+                    { text: { en: "Heavy on processed", hi: "ज्यादातर प्रोसेस्ड" }, score: 45, tip: { en: "Processed foods require more energy to produce.", hi: "प्रोसेस्ड खाद्य पदार्थों के उत्पादन में अधिक ऊर्जा लगती है।" } }
+                ]
+            },
+            {
+                category: { en: 'Food Waste', hi: 'भोजन की बर्बादी' },
+                question: { en: "How often do you throw away food?", hi: "आप कितनी बार खाना फेंकते हैं?" },
+                options: [
+                    { text: { en: "Almost never", hi: "लगभग कभी नहीं" }, score: 0, tip: null },
+                    { text: { en: "Once a week", hi: "सप्ताह में एक बार" }, score: 20, tip: { en: "Plan meals ahead to avoid spoilage.", hi: "खराब होने से बचने के लिए भोजन की योजना पहले से बनाएं।" } },
+                    { text: { en: "Daily / Frequently", hi: "रोजाना / अक्सर" }, score: 50, tip: { en: "Rotting food in landfills releases methane. Try composting.", hi: "लैंडफिल में सड़ता हुआ भोजन मीथेन छोड़ता है। खाद बनाने की कोशिश करें।" } }
+                ]
+            },
+            {
+                category: { en: 'Housing', hi: 'आवास' },
+                question: { en: "How do you heat/cool your home?", hi: "आप अपने घर को गर्म/ठंडा कैसे करते हैं?" },
+                options: [
+                    { text: { en: "Smart thermostat", hi: "स्मार्ट थर्मोस्टेट" }, score: 10, tip: null },
+                    { text: { en: "AC/Heating as needed", hi: "जरूरत पड़ने पर एसी/हीटर" }, score: 30, tip: { en: "Seal drafty windows to keep temperature stable.", hi: "तापमान स्थिर रखने के लिए खिड़कियों को सील करें।" } },
+                    { text: { en: "Always on high", hi: "हमेशा तेज पर" }, score: 60, tip: { en: "Adjust by just 2 degrees to save massive energy.", hi: "ऊर्जा बचाने के लिए तापमान को सिर्फ 2 डिग्री समायोजित करें।" } }
+                ]
+            },
+            {
+                category: { en: 'Digital', hi: 'डिजिटल' },
+                question: { en: "How much video streaming do you do?", hi: "आप कितना वीडियो स्ट्रीमिंग करते हैं?" },
+                options: [
+                    { text: { en: "Minimal", hi: "बहुत कम" }, score: 5, tip: null },
+                    { text: { en: "1-2 hours daily", hi: "रोजाना 1-2 घंटे" }, score: 15, tip: { en: "Streaming in 4K uses huge power. 1080p is enough!", hi: "4K में स्ट्रीमिंग बहुत बिजली खपत करती है। 1080p काफी है!" } },
+                    { text: { en: "Constant", hi: "लगातार" }, score: 30, tip: { en: "Turn off 'autoplay' and download content over Wi-Fi.", hi: "'ऑटोप्ले' बंद करें और वाई-फाई पर कंटेंट डाउनलोड करें।" } }
+                ]
+            },
+            {
+                category: { en: 'Tech', hi: 'तकनीक' },
+                question: { en: "How often do you upgrade tech?", hi: "आप कितनी बार तकनीक अपग्रेड करते हैं?" },
+                options: [
+                    { text: { en: "Only when broken", hi: "जब खराब हो जाए" }, score: 0, tip: "Great! E-waste is a massive problem." },
+                    { text: { en: "Every 2-3 years", hi: "हर 2-3 साल में" }, score: 30, tip: { en: "Manufacturing electronics is 80% of their footprint.", hi: "इलेक्ट्रॉनिक्स का निर्माण उनके फुटप्रिंट का 80% है।" } },
+                    { text: { en: "Every year", hi: "हर साल" }, score: 60, tip: { en: "Consider buying refurbished tech.", hi: "नवीनीकृत (refurbished) तकनीक खरीदने पर विचार करें।" } }
+                ]
+            },
+            {
+                category: { en: 'Lifestyle', hi: 'जीवन शैली' },
+                question: { en: "Do you use single-use plastics?", hi: "क्या आप सिंगल-यूज़ प्लास्टिक का उपयोग करते हैं?" },
+                options: [
+                    { text: { en: "Reusable bottle/bags", hi: "पुन: प्रयोज्य बोतल/बैग" }, score: 0, tip: null },
+                    { text: { en: "Sometimes", hi: "कभी-कभी" }, score: 15, tip: { en: "Keep a reusable bag in your backpack.", hi: "अपने बैकपैक में एक पुन: प्रयोज्य बैग रखें।" } },
+                    { text: { en: "Daily", hi: "रोजाना" }, score: 40, tip: { en: "A reusable cup saves hundreds of cups a year.", hi: "एक पुन: प्रयोज्य कप साल में सैकड़ों कप बचाता है।" } }
+                ]
+            },
+            {
+                category: { en: 'Commute', hi: 'आवागमन' },
+                question: { en: "What is your daily commute distance?", hi: "आपकी दैनिक यात्रा की दूरी क्या है?" },
+                options: [
+                    { text: { en: "WFH / <5km", hi: "घर से काम / <5किमी" }, score: 0, tip: null },
+                    { text: { en: "5-20km", hi: "5-20किमी" }, score: 20, tip: { en: "Ensure tires are inflated for fuel efficiency.", hi: "ईंधन दक्षता के लिए सुनिश्चित करें कि टायर में हवा सही है।" } },
+                    { text: { en: "20km+ driving", hi: "20किमी+ ड्राइविंग" }, score: 50, tip: { en: "Could you carpool or work remotely?", hi: "क्या आप कारपूल कर सकते हैं या घर से काम कर सकते हैं?" } }
+                ]
+            },
+            {
+                category: { en: 'Housing', hi: 'आवास' },
+                question: { en: "What type of housing do you live in?", hi: "आप किस प्रकार के आवास में रहते हैं?" },
+                options: [
+                    { text: { en: "Apartment / Shared", hi: "अपार्टमेंट / साझा" }, score: 10, tip: { en: "Shared walls mean better heat retention!", hi: "साझा दीवारों का मतलब है बेहतर गर्मी प्रतिधारण!" } },
+                    { text: { en: "Small House", hi: "छोटा घर" }, score: 30, tip: { en: "Insulating your attic saves energy.", hi: "अपनी अटारी (attic) को इंसुलेट करने से ऊर्जा बचती है।" } },
+                    { text: { en: "Large House", hi: "बड़ा घर" }, score: 60, tip: { en: "Heat only the rooms you are using.", hi: "केवल उन कमरों को गर्म करें जिनका आप उपयोग कर रहे हैं।" } }
+                ]
+            }
+        ];
+
+        // --- STATE ---
+        let currentQIndex = 0;
+        let totalScore = 0;
+        let collectedTips = []; // Stores objects { category: {...}, text: {...} }
+        let currentLang = 'en'; // 'en' or 'hi'
+
+        // --- ELEMENTS ---
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const optionsContainer = document.getElementById('options-container');
+
+        // --- FUNCTIONS ---
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'hi' : 'en';
+            
+            // Update Toggle Button Text
+            document.getElementById('lang-label').textContent = uiText.langBtn[currentLang];
+
+            // Refresh Current View
+            if (!welcomeScreen.classList.contains('hidden')) {
+                updateWelcomeUI();
+            } else if (!quizScreen.classList.contains('hidden')) {
+                renderQuestion(); // Re-render current question in new lang
+            } else if (!resultsScreen.classList.contains('hidden')) {
+                showResults(); // Re-render results in new lang
+            }
+        }
+
+        function updateWelcomeUI() {
+            document.getElementById('ui-title').textContent = uiText.title[currentLang];
+            document.getElementById('ui-subtitle').textContent = uiText.subtitle[currentLang];
+            document.getElementById('ui-start-btn').textContent = uiText.startBtn[currentLang];
+        }
+
+        function startQuiz() {
+            welcomeScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQIndex];
+            
+            // Update UI
+            document.getElementById('question-tracker').textContent = `${uiText.questionLabel[currentLang]} ${currentQIndex + 1} ${uiText.ofLabel[currentLang]} ${questions.length}`;
+            document.getElementById('question-category').textContent = q.category[currentLang];
+            document.getElementById('question-text').textContent = q.question[currentLang];
+            document.getElementById('progress-bar').style.width = `${((currentQIndex + 1) / questions.length) * 100}%`;
+
+            // Clear old buttons
+            optionsContainer.innerHTML = '';
+
+            // Create new buttons
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-option';
+                btn.innerHTML = `<span>${opt.text[currentLang]}</span> <span style="opacity:0.3">➜</span>`;
+                btn.onclick = () => handleAnswer(opt.score, opt.tip);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(score, tipObj) {
+            totalScore += score;
+            if (tipObj) {
+                // Store the whole tip object (both langs) so we can display in currentLang later
+                collectedTips.push({ category: questions[currentQIndex].category, text: tipObj });
+            }
+
+            if (currentQIndex < questions.length - 1) {
+                currentQIndex++;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+
+            // Update Static UI
+            document.getElementById('ui-score-label').textContent = uiText.scoreLabel[currentLang];
+            document.getElementById('ui-tips-title').textContent = uiText.tipsTitle[currentLang];
+            document.getElementById('ui-restart-btn').textContent = uiText.restartBtn[currentLang];
+
+            // Set Score
+            document.getElementById('final-score').textContent = totalScore;
+            
+            // Set Rating
+            const badge = document.getElementById('score-badge');
+            const desc = document.getElementById('score-desc');
+            
+            let ratingData;
+            if (totalScore <= 250) ratingData = uiText.ratings.low;
+            else if (totalScore <= 550) ratingData = uiText.ratings.med;
+            else ratingData = uiText.ratings.high;
+
+            badge.textContent = ratingData.badge[currentLang];
+            desc.textContent = ratingData.desc[currentLang];
+
+            // Colors (Keep consistent across languages)
+            if (totalScore <= 250) {
+                badge.style.backgroundColor = "#d1fae5"; badge.style.color = "#059669";
+            } else if (totalScore <= 550) {
+                badge.style.backgroundColor = "#fef3c7"; badge.style.color = "#d97706";
+            } else {
+                badge.style.backgroundColor = "#fee2e2"; badge.style.color = "#dc2626";
+            }
+
+            // Render Tips
+            const tipsList = document.getElementById('tips-list');
+            tipsList.innerHTML = '';
+            
+            if (collectedTips.length === 0) {
+                tipsList.innerHTML = `<div class="tip-card"><p>${uiText.noTips[currentLang]}</p></div>`;
+            } else {
+                collectedTips.forEach(tipItem => {
+                    const div = document.createElement('div');
+                    div.className = 'tip-card';
+                    div.innerHTML = `
+                        <div style="font-weight:bold; color:#059669; min-width:90px; font-size: 0.9em;">${tipItem.category[currentLang]}</div>
+                        <div>${tipItem.text[currentLang]}</div>
+                    `;
+                    tipsList.appendChild(div);
+                });
+            }
+        }
+
+        function restartQuiz() {
+            currentQIndex = 0;
+            totalScore = 0;
+            collectedTips = [];
+            resultsScreen.classList.add('hidden');
+            welcomeScreen.classList.remove('hidden');
+            updateWelcomeUI(); // Ensure welcome screen is in correct language
+        }
+
+        // Initialize
+        updateWelcomeUI();
+
+    </script>
+</body>
+</html>
