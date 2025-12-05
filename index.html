@@ -28,7 +28,7 @@
             justify-content: center;
             align-items: center;
             color: var(--text);
-            overflow: hidden; /* Body doesn't scroll, card does */
+            overflow: hidden; 
         }
 
         /* The "Glass" Card */
@@ -56,7 +56,7 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--glass-border);
-            flex-shrink: 0; /* Header never shrinks */
+            flex-shrink: 0; 
         }
         .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; color: var(--primary); }
         .badge { font-size: 0.7rem; background: var(--primary); color: #000; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
@@ -65,44 +65,36 @@
         .progress-track { width: 100%; height: 6px; background: rgba(255,255,255,0.1); flex-shrink: 0; }
         .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px var(--primary); }
 
-        /* Content Area - FIXED SCROLLING */
+        /* Content Area */
         .content-area {
-            flex: 1; /* Takes remaining height */
+            flex: 1; 
             padding: 30px 25px;
-            overflow-y: auto; /* Enables scrolling inside the card */
+            overflow-y: auto; 
             display: flex;
             flex-direction: column;
-            /* Scrollbar styling */
             scrollbar-width: thin;
             scrollbar-color: var(--primary) transparent;
         }
         
-        /* Webkit Scrollbar */
         .content-area::-webkit-scrollbar { width: 6px; }
         .content-area::-webkit-scrollbar-thumb { background-color: var(--primary); border-radius: 10px; }
         .content-area::-webkit-scrollbar-track { background: transparent; }
 
-        /* Centering Utility for Quiz/Welcome screens */
-        .center-content {
-            margin: auto 0; /* Vertically centers content if there is space */
-        }
+        .center-content { margin: auto 0; }
 
         /* Typography */
         h1 { font-size: 2.2rem; margin: 0 0 10px; line-height: 1.1; }
-        h2 { font-size: 1.8rem; margin: 0 0 25px; font-weight: 600; }
+        h2 { font-size: 1.5rem; margin: 0 0 25px; font-weight: 600; }
         p { color: rgba(255,255,255,0.8); line-height: 1.6; font-size: 0.95rem; }
 
         /* Big Tile Buttons */
-        .options-grid {
-            display: grid;
-            gap: 12px;
-        }
+        .options-grid { display: grid; gap: 10px; }
         
         .tile-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid transparent;
-            padding: 18px 20px;
-            border-radius: 16px;
+            padding: 15px 18px;
+            border-radius: 12px;
             color: white;
             text-align: left;
             cursor: pointer;
@@ -110,17 +102,17 @@
             display: flex;
             align-items: center;
             font-family: inherit;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
         .tile-btn:hover {
             background: rgba(255, 255, 255, 0.15);
             border-color: var(--primary);
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         
-        .tile-icon { font-size: 1.5rem; margin-right: 15px; }
+        .tile-icon { font-size: 1.4rem; margin-right: 15px; }
 
         /* Start Button */
         .glow-btn {
@@ -166,7 +158,7 @@
             border-radius: 8px;
             margin-top: 15px;
             font-size: 0.9rem;
-            margin-bottom: 20px; /* Spacing for scroll */
+            margin-bottom: 20px; 
         }
 
         /* Animations */
@@ -191,7 +183,7 @@
 <div class="app-card">
     <header>
         <div class="logo">ECO-WARRIOR</div>
-        <div class="badge">GROUP 6</div>
+        <div class="badge">GROUP 5</div>
     </header>
     
     <div class="progress-track"><div id="bar" class="progress-fill"></div></div>
@@ -207,11 +199,12 @@
 
 <script>
     /* --- DATA & LOGIC --- */
-    // FIXED: Added a 5th Category (Waste) for the last question
+    // CATEGORIES: 0:Travel, 1:Food, 2:Energy, 3:Shopping, 4:Waste
     const questions = [
+        // --- TRAVEL (3 Questions) ---
         { 
-            q: "How do you get around?", 
-            cat: 0, // Travel
+            q: "How do you usually commute?", 
+            cat: 0,
             opts: [
                 { icon: "🚗", txt: "Car (Solo)", val: 100 },
                 { icon: "🛵", txt: "Motorbike", val: 60 },
@@ -221,37 +214,93 @@
         },
         { 
             q: "How often do you fly?", 
-            cat: 0, // Travel
+            cat: 0, 
             opts: [
-                { icon: "✈️", txt: "Frequently", val: 150 },
-                { icon: "🏖️", txt: "1-2 times/yr", val: 50 },
+                { icon: "✈️", txt: "Frequently (3+)", val: 120 },
+                { icon: "🏖️", txt: "1-2 times/yr", val: 60 },
                 { icon: "❌", txt: "Never", val: 0 },
                 { icon: "🚂", txt: "I take trains", val: 10 }
             ]
         },
         { 
-            q: "What's on your plate?", 
-            cat: 1, // Food
+            q: "What is your daily travel distance?", 
+            cat: 0, 
+            opts: [
+                { icon: "🛣️", txt: "Long (30km+)", val: 80 },
+                { icon: "🏙️", txt: "Medium (10-30km)", val: 40 },
+                { icon: "🏡", txt: "Short (<10km)", val: 15 },
+                { icon: "💻", txt: "WFH / Zero", val: 0 }
+            ]
+        },
+
+        // --- FOOD (3 Questions) ---
+        { 
+            q: "What's your diet type?", 
+            cat: 1, 
             opts: [
                 { icon: "🍖", txt: "Heavy Meat", val: 100 },
-                { icon: "🍗", txt: "Some Meat", val: 60 },
+                { icon: "🍗", txt: "Occasional Meat", val: 60 },
                 { icon: "🥗", txt: "Vegetarian", val: 30 },
                 { icon: "🥑", txt: "Vegan", val: 10 }
             ]
         },
         { 
+            q: "Where does your food come from?", 
+            cat: 1, 
+            opts: [
+                { icon: "📦", txt: "Imported/Processed", val: 50 },
+                { icon: "🏪", txt: "Supermarket Mix", val: 30 },
+                { icon: "🚜", txt: "Locally Grown", val: 10 },
+                { icon: "🌱", txt: "Own Garden", val: 0 }
+            ]
+        },
+        { 
+            q: "How often do you waste food?", 
+            cat: 1, 
+            opts: [
+                { icon: "🗑️", txt: "Frequently", val: 40 },
+                { icon: "🗓️", txt: "Weekly", val: 20 },
+                { icon: "🍽️", txt: "Rarely", val: 5 },
+                { icon: "♻️", txt: "I Compost", val: -5 }
+            ]
+        },
+
+        // --- ENERGY (3 Questions) ---
+        { 
             q: "AC habits at home?", 
-            cat: 2, // Energy
+            cat: 2, 
             opts: [
                 { icon: "❄️", txt: "All day long", val: 100 },
                 { icon: "🌙", txt: "Only at night", val: 50 },
-                { icon: "💨", txt: "Fans only", val: 10 },
+                { icon: "💨", txt: "Fans only", val: 15 },
                 { icon: "🌡️", txt: "No AC needed", val: 0 }
             ]
         },
         { 
+            q: "Average shower time?", 
+            cat: 2, 
+            opts: [
+                { icon: "🚿", txt: "Long (20m+)", val: 50 },
+                { icon: "⏲️", txt: "Medium (10m)", val: 30 },
+                { icon: "⚡", txt: "Quick (5m)", val: 10 },
+                { icon: "🪣", txt: "Bucket Bath", val: 5 }
+            ]
+        },
+        { 
+            q: "Video streaming habits?", 
+            cat: 2, 
+            opts: [
+                { icon: "📺", txt: "4K Streaming Daily", val: 40 },
+                { icon: "💻", txt: "HD / Moderate", val: 20 },
+                { icon: "📱", txt: "Low / Wi-Fi only", val: 10 },
+                { icon: "📚", txt: "I prefer reading", val: 0 }
+            ]
+        },
+
+        // --- SHOPPING (3 Questions) ---
+        { 
             q: "Shopping frequency?", 
-            cat: 3, // Shopping
+            cat: 3, 
             opts: [
                 { icon: "🛍️", txt: "Weekly (Fast Fashion)", val: 80 },
                 { icon: "📅", txt: "Monthly", val: 40 },
@@ -260,20 +309,61 @@
             ]
         },
         { 
-            q: "Do you recycle?", 
-            cat: 4, // FIXED: Changed from 3 to 4 (New Category: Waste)
+            q: "Tech upgrade cycle?", 
+            cat: 3, 
             opts: [
-                { icon: "🗑️", txt: "No, straight to trash", val: 30 },
-                { icon: "🤷", txt: "Sometimes", val: 15 },
-                { icon: "♻️", txt: "Yes, strictly", val: 0 },
-                { icon: "🌱", txt: "I also compost", val: -5 }
+                { icon: "📱", txt: "Every Year (Latest)", val: 100 },
+                { icon: "🔄", txt: "Every 2-3 Years", val: 50 },
+                { icon: "🛠️", txt: "When it breaks", val: 10 },
+                { icon: "📦", txt: "I buy refurbished", val: 5 }
+            ]
+        },
+        { 
+            q: "Single-use plastics?", 
+            cat: 3, 
+            opts: [
+                { icon: "🥤", txt: "Daily (Bottles/Cups)", val: 60 },
+                { icon: "🥡", txt: "Takeout often", val: 30 },
+                { icon: "🎒", txt: "Sometimes", val: 15 },
+                { icon: "🥢", txt: "Strictly Reusable", val: 0 }
+            ]
+        },
+
+        // --- WASTE (3 Questions) ---
+        { 
+            q: "Do you recycle?", 
+            cat: 4, 
+            opts: [
+                { icon: "🗑️", txt: "No, straight to trash", val: 40 },
+                { icon: "🤷", txt: "Sometimes", val: 20 },
+                { icon: "♻️", txt: "Yes, mostly", val: 5 },
+                { icon: "🔍", txt: "Strictly segregate", val: 0 }
+            ]
+        },
+        { 
+            q: "Paper usage?", 
+            cat: 4, 
+            opts: [
+                { icon: "🖨️", txt: "Print everything", val: 30 },
+                { icon: "📝", txt: "Notebooks/Post-its", val: 15 },
+                { icon: "📄", txt: "Double-sided", val: 5 },
+                { icon: "📱", txt: "100% Digital", val: 0 }
+            ]
+        },
+        { 
+            q: "Furniture/Home items?", 
+            cat: 4, 
+            opts: [
+                { icon: "🛋️", txt: "Buy new often", val: 50 },
+                { icon: "🖼️", txt: "Occasional updates", val: 25 },
+                { icon: "🔨", txt: "Repair/Repurpose", val: 5 },
+                { icon: "🤝", txt: "Second-hand only", val: 0 }
             ]
         }
     ];
 
     let current = 0;
-    // FIXED: Scores array now has 5 slots [Travel, Food, Energy, Shopping, Waste]
-    let scores = [0, 0, 0, 0, 0]; 
+    let scores = [0, 0, 0, 0, 0]; // Travel, Food, Energy, Shopping, Waste
 
     function renderStart() {
         document.getElementById('app-content').innerHTML = `
@@ -289,7 +379,7 @@
 
     function startQuiz() {
         current = 0;
-        scores = [0,0,0,0,0]; // Reset to 5 slots
+        scores = [0,0,0,0,0]; 
         renderQ();
     }
 
@@ -327,15 +417,16 @@
     function renderResult() {
         document.getElementById('bar').style.width = "100%";
         
-        // Calculate Score
+        // Calculate Score (Calibrated for 15 questions)
+        // Max possible score is approx 1200. Urban India avg ~3-4 tons. High ~8+.
         let total = scores.reduce((a,b)=>a+b, 0);
-        let tons = (1.5 + (total / 100)).toFixed(1);
+        let tons = (1.5 + (total / 300)).toFixed(1); 
         
         // Determine Status
         let msg = "";
         let color = "";
-        if(tons < 3) { msg = "Eco Hero! 🌿"; color = "#00E676"; }
-        else if(tons < 5) { msg = "Average Citizen 🚶"; color = "#FFC107"; }
+        if(tons < 3.5) { msg = "Eco Hero! 🌿"; color = "#00E676"; }
+        else if(tons < 6) { msg = "Average Citizen 🚶"; color = "#FFC107"; }
         else { msg = "High Impact ⚠️"; color = "#FF5252"; }
 
         // Determine Highest Category for Tips
@@ -353,16 +444,13 @@
 
         // Breakdown List Generation
         let breakdownHTML = "";
-        // FIXED: Added 5th color and icon for Waste
         const colors = ['#29B6F6', '#FFA726', '#EF5350', '#AB47BC', '#8D6E63'];
         const icons = ['🚗', '🍔', '⚡', '🛍️', '♻️'];
         
         scores.forEach((score, index) => {
-            // Prevent division by zero if total is 0
             let displayTotal = total === 0 ? 1 : total;
             let percent = Math.round((score / displayTotal) * 100);
             
-            // Only show category if it has a score > 0 to save space, or keep all for consistency
             breakdownHTML += `
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.9rem;">
                     <span><span style="color:${colors[index]}">${icons[index]} ${categories[index]}</span></span>
@@ -400,7 +488,6 @@
             </div>
         `;
 
-        // Render Chart
         setTimeout(() => {
             const ctx = document.getElementById('chart').getContext('2d');
             new Chart(ctx, {
