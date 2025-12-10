@@ -161,6 +161,17 @@
             margin-bottom: 20px; 
         }
 
+        /* Disclaimer Style */
+        .disclaimer {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.4);
+            margin-top: 20px;
+            line-height: 1.4;
+            font-style: italic;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 10px;
+        }
+
         /* Animations */
         .fade-enter { animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); width: 100%; }
         @keyframes slideUp { 
@@ -418,7 +429,6 @@
         document.getElementById('bar').style.width = "100%";
         
         // Calculate Score (Calibrated for 15 questions)
-        // Max possible score is approx 1200. Urban India avg ~3-4 tons. High ~8+.
         let total = scores.reduce((a,b)=>a+b, 0);
         let tons = (1.5 + (total / 300)).toFixed(1); 
         
@@ -485,6 +495,12 @@
                 </div>
 
                 <button class="glow-btn" onclick="startQuiz()" style="padding:15px; font-size:1rem; margin-top:10px; background:rgba(255,255,255,0.1); color:white;">Retake Quiz</button>
+
+                <!-- DISCLAIMER ADDED HERE -->
+                <p class="disclaimer">
+                    *Disclaimer: This calculator is for educational and awareness purposes only. 
+                    The values are estimates based on user inputs and may not reflect scientific precision.
+                </p>
             </div>
         `;
 
@@ -508,9 +524,14 @@
                             display: true, 
                             position: 'bottom',
                             labels: { color: 'white', boxWidth: 12, padding: 20, font: { family: 'Montserrat' } }
-                        } 
+                        },
+                        // --- HOVER DISABLED HERE ---
+                        tooltip: { enabled: false } 
                     },
-                    cutout: '60%'
+                    cutout: '60%',
+                    // --- INTERACTIONS DISABLED HERE ---
+                    hover: { mode: null },
+                    events: [] 
                 }
             });
         }, 100);
