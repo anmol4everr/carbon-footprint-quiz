@@ -59,7 +59,7 @@
             flex-shrink: 0; 
         }
         .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; color: var(--primary); }
-        .badge { font-size: 0.7rem; background: var(--primary); color: #000; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
+        /* Removed .badge class since Group 5 is gone */
 
         /* Progress Bar */
         .progress-track { width: 100%; height: 6px; background: rgba(255,255,255,0.1); flex-shrink: 0; }
@@ -114,7 +114,7 @@
         
         .tile-icon { font-size: 1.4rem; margin-right: 15px; }
 
-        /* Start Button */
+        /* Start & Retake Button */
         .glow-btn {
             background: var(--primary);
             color: #000;
@@ -130,6 +130,24 @@
             width: 100%;
         }
         .glow-btn:hover { transform: scale(1.05); }
+
+        /* Back Button */
+        .back-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            padding: 5px 0;
+            transition: color 0.2s;
+            align-self: flex-start;
+        }
+        .back-btn:hover { color: var(--primary); }
 
         /* Results Design */
         .score-display {
@@ -194,7 +212,7 @@
 <div class="app-card">
     <header>
         <div class="logo">ECO-WARRIOR</div>
-        <div class="badge">GROUP 5</div>
+        <!-- Group Name removed as requested -->
     </header>
     
     <div class="progress-track"><div id="bar" class="progress-fill"></div></div>
@@ -375,6 +393,10 @@
 
     let current = 0;
     let scores = [0, 0, 0, 0, 0]; // Travel, Food, Energy, Shopping, Waste
+    
+    // NEW: History stack to allow "Back" functionality
+    // Stores objects: { cat: number, val: number }
+    let historyStack = [];
 
     function renderStart() {
         document.getElementById('app-content').innerHTML = `
@@ -391,6 +413,18 @@
     function startQuiz() {
         current = 0;
         scores = [0,0,0,0,0]; 
+        historyStack = []; // Reset history
+        renderQ();
+    }
+
+    // NEW: Function to go back
+    function goBack() {
+        if(current === 0) return; // Can't go back from first question
+        
+        const lastAction = historyStack.pop(); // Remove last action
+        scores[lastAction.cat] -= lastAction.val; // Undo score
+        current--; // Go back one question
+        
         renderQ();
     }
 
@@ -408,8 +442,14 @@
             </div>
         `).join('');
 
+        // NEW: Back button HTML (Only show if not on first question)
+        const backBtnHtml = current > 0 ? 
+            `<button class="back-btn" onclick="goBack()">← Back</button>` : 
+            `<div style="height: 29px;"></div>`; // Spacer to keep layout jump-free
+
         document.getElementById('app-content').innerHTML = `
             <div class="fade-enter center-content">
+                ${backBtnHtml}
                 <p style="text-transform:uppercase; letter-spacing:1px; font-size:0.8rem; color:var(--primary)">Question ${current+1} / ${questions.length}</p>
                 <h2>${q.q}</h2>
                 <div class="options-grid">
@@ -420,6 +460,9 @@
     }
 
     function handle(cat, val) {
+        // NEW: Push to history before updating
+        historyStack.push({ cat: parseInt(cat), val: val });
+        
         scores[parseInt(cat)] += val;
         current++;
         renderQ();
@@ -496,7 +539,7 @@
 
                 <button class="glow-btn" onclick="startQuiz()" style="padding:15px; font-size:1rem; margin-top:10px; background:rgba(255,255,255,0.1); color:white;">Retake Quiz</button>
 
-                <!-- DISCLAIMER ADDED HERE -->
+                <!-- DISCLAIMER -->
                 <p class="disclaimer">
                     *Disclaimer: This calculator is for educational and awareness purposes only. 
                     The values are estimates based on user inputs and may not reflect scientific precision.
@@ -525,11 +568,11 @@
                             position: 'bottom',
                             labels: { color: 'white', boxWidth: 12, padding: 20, font: { family: 'Montserrat' } }
                         },
-                        // --- HOVER DISABLED HERE ---
+                        // --- HOVER DISABLED ---
                         tooltip: { enabled: false } 
                     },
                     cutout: '60%',
-                    // --- INTERACTIONS DISABLED HERE ---
+                    // --- INTERACTIONS DISABLED ---
                     hover: { mode: null },
                     events: [] 
                 }
